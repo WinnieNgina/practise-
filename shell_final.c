@@ -8,6 +8,8 @@
 #define MAX_TOKEN_SIZE 64       /* IGNORE FOR NOW */
 #define MAX_NUM_TOKENS 64       /* max number of whitespace/" " separated strings a user can enter */
 
+extern char **environ;
+
 /* function declarations */
 char *read_input();
 int tokenize(char *input, char **tokens, int max_tokens);
@@ -71,10 +73,23 @@ int tokenize(char *input, char **tokens, int max_tokens)
 void execute(char **tokens)
 {
 	pid_t pid;
+	char **env = environ;
+	size_t len;
 	
 	if (strcmp(tokens[0], "exit") == 0) /* check if command is "exit" */
 	{
 		exit(0); /* exit the shell */
+	}
+	if (strcmp(tokens[0], "env") == 0) /* env built-in command */
+	{
+		while (*env != NULL)
+		{
+			len = strlen(*env);
+			write(STDOUT_FILENO, *env, len);
+			write(STDOUT_FILENO, "\n", 1);
+			env++;
+		}
+		exit(0);
 	}
 	pid = fork(); /* create child process using fork since we are about to call execve() */
 	if (pid == 0) /* fork() is 0 for child process thus pid == 0 if it's a child process */
