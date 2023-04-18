@@ -89,7 +89,6 @@ void execute(char **tokens)
 			write(STDOUT_FILENO, "\n", 1);
 			env++;
 		}
-		exit(0);
 	}
 	pid = fork(); /* create child process using fork since we are about to call execve() */
 	if (pid == 0) /* fork() is 0 for child process thus pid == 0 if it's a child process */
