@@ -80,31 +80,35 @@ void execute(char **tokens)
 	{
 		exit(0); /* exit the shell */
 	}
-	if (strcmp(tokens[0], "env") == 0) /* env built-in command */
-	{
-		while (*env != NULL)
+	else if 
+		(strcmp(tokens[0], "env") == 0) /* env built-in command */
 		{
-			len = strlen(*env);
-			write(STDOUT_FILENO, *env, len);
-			write(STDOUT_FILENO, "\n", 1);
-			env++;
+			while (*env != NULL)
+			{
+				len = strlen(*env);
+				write(STDOUT_FILENO, *env, len);
+				write(STDOUT_FILENO, "\n", 1);
+				env++;
+			}
 		}
-	}
-	pid = fork(); /* create child process using fork since we are about to call execve() */
-	if (pid == 0) /* fork() is 0 for child process thus pid == 0 if it's a child process */
+	else
 	{
-		execve(tokens[0], tokens, NULL); /* execute commands using execve() */
-		perror("execve failure"); /* only execeutes if execve fails */
-		exit(1); /* only execeutes if execve fails */
-	}
-	else if (pid > 0) /* fork() is > 0 for parent process thus pid > 0 */
-	{
-		wait(NULL); /* since it's parent process, ask it to wait for child process to complete using wait */
-	}
-	else /* only true if fork() fails pid == -1 */
-	{
-		perror("fork failed");
-		exit(1);
+		pid = fork(); /* create child process using fork since we are about to call execve() */
+		if (pid == 0) /* fork() is 0 for child process thus pid == 0 if it's a child process */
+		{
+			execve(tokens[0], tokens, environ); /* execute commands using execve() */
+			perror("execve failure"); /* only execeutes if execve fails */
+			exit(1); /* only execeutes if execve fails */
+		}
+		else if (pid > 0) /* fork() is > 0 for parent process thus pid > 0 */
+		{
+			wait(NULL); /* since it's parent process, ask it to wait for child process to complete using wait */
+		}
+		else /* only true if fork() fails pid == -1 */
+		{
+			perror("fork failed");
+			exit(1);
+		}
 	}
 }
 
