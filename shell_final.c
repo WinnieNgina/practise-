@@ -23,11 +23,17 @@ int main(void)
 
 	while (1)
 	{
-		write(STDOUT_FILENO, "#cisfun$ ", 9);   /* displays prompt */
+		if (isatty(0))
+		{
+			write(STDOUT_FILENO, "#cisfun$ ", 9);   /* displays prompt */
+		}
 		input = read_input(); /* read user input */
 		if (input == NULL) /* end of file */
 		{
-			write(STDOUT_FILENO, "\n", 1);
+			if (isatty(0))
+			{
+				write(STDOUT_FILENO, "\n", 1);
+			}
 			free(input);
 			exit(0);
 		}
