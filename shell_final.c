@@ -84,7 +84,15 @@ void execute(char **tokens)
 	
 	if (strcmp(tokens[0], "exit") == 0) /* check if command is "exit" */
 	{
-		exit(0); /* exit the shell */
+		if (tokens[1] != NULL) /* check if there is an argument provided */
+		{
+			int status = atoi(tokens[1]); /* convert argument to integer */
+			exit(status); /* exit shell with provided status */
+		}
+		else
+		{
+			exit(0); /* exit the shell with default status 0 */
+		}
 	}
 	else if 
 		(strcmp(tokens[0], "env") == 0) /* env built-in command */
@@ -97,6 +105,35 @@ void execute(char **tokens)
 				env++;
 			}
 		}
+	else if 
+		(strcmp(tokens[0], "setenv") == 0) /* setenv built-in command */
+		{
+			if (tokens[1] == NULL || tokens[2] == NULL)
+			{
+				write(STDERR_FILENO, "setenv: invalid arguments\n", strlen("setenv: invalid arguments\n"));
+			}
+			else
+			{
+				if (setenv(tokens[1], tokens[2], 1) != 0) /* set environment variable */
+				{
+					write(STDERR_FILENO, "setenv: failed to set variable\n", strlen("setenv: failed to set variable\n"));
+				}
+			}
+		}
+	else if (strcmp(tokens[0], "unsetenv") == 0) /* unsetenv built-in command */
+	{
+		if (tokens[1] == NULL)
+		{
+			write(STDERR_FILENO, "unsetenv: invalid arguments\n", strlen("unsetenv: invalid arguments\n"));
+		}
+		else
+		{
+			if (unsetenv(tokens[1]) != 0) /* unset environment variable */
+			{
+				write(STDERR_FILENO, "unsetenv: failed to unset variable\n", strlen("unsetenv: failed to unset variable\n"));
+			}
+		}
+	}
 	else
 	{
 		pid = fork(); /* create child process using fork since we are about to call execve() */
