@@ -12,15 +12,22 @@ void execute(char **tokens)
 	while (tokens[i] != NULL)
 	{
 		if (strcmp(tokens[i], "&&") == 0)
+		/*checks if the current token in the tokens array is "&&"*/
 		{
 			tokens[i] = NULL;
+			/*set token containing "&&" to null*/
+			/*splits the tokens array into two separate arrays */
+			/*one for the command before "&&" and another for the command after "&&"*/
 			execute(tokens); /* execute first command */
 			status = status && WIFEXITED(status) && (WEXITSTATUS(status) == 0);
+			/*Checks the exit status of the first command*/
+			/* Non-zero exit status indicates failure*/
 			if (status == 0)
 			{
-				return; /* if first command fails, return without executing second command */
+				return; /*if first command fails, return without executing second command */
 			}
 			tokens += i + 1;
+			/* If the first command succeeds, it move the "tokens" pointer to the next command*/
 			i = 0;
 			continue;
 		}
