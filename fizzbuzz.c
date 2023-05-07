@@ -10,7 +10,7 @@ char** fizzBuzz(int n, int* returnSize)
 
 	str = (char **)malloc (sizeof(char *) *n);
 	/*Allocating memory for the string*/
-	for (int index = 1; index <= n; index++)
+	for (index = 1; index <= n; index++)
 	/*iterate from one to find string value*/
 	{
 		if (index % 15 == 0)
@@ -54,6 +54,8 @@ char** fizzBuzz(int n, int* returnSize)
 int main(void)
 {
 	int n;
+	int i;
+	int j;
 	int returnSize;
 	char** str;
 
@@ -61,7 +63,7 @@ int main(void)
 	scanf("%d", &n);
 	str = fizzBuzz(n, &returnSize);
 	/*print the resulting array*/
-	for (int i = 0; i < returnSize; i++)
+	for (i = 0; i < returnSize; i++)
 	{
 		printf("%s", str[i]);
 		if (i < returnSize - 1)
@@ -71,9 +73,11 @@ int main(void)
 	}
 	printf("\n");
 	/*Free the allocated memory*/
-	for (int i = 0; i < n; i++)
+	for (j = 0; j < n; j++)
 	{
-		free(str[i]);
+		free(str[j]);
 	}
 	free(str);
+	return (0);
+
 }
